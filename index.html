@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Q - Open-source Protocol</title>
+    <style>
+      @font-face {
+        font-family: "Replica LL Regular";
+        src: url("ReplicaLL-Regular.otf") format("opentype");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      :root {
+        --main-bg-color: #000;
+        --text-color: #fff;
+        --accent-color: #3f51b5;
+        --spacing-unit: 1rem;
+        --font-main: "Replica LL Regular", "Replica LL Regular Placeholder",
+          sans-serif;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .animation-container {
+        position: absolute;
+        margin-top: 25px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        overflow: hidden;
+        pointer-events: none;
+        width: 100%;
+        height: 140%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .main-contaner {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        font-family: var(--font-main);
+        background-color: var(--main-bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        width: 100vw;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .container {
+        max-width: 800px;
+        height: 95vh;
+        width: 100%;
+        text-align: center;
+        z-index: 2;
+        position: relative;
+        margin-top: 30px;
+        opacity: 0;
+        transform: translateY(-50px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+
+      .container.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .logo {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 2rem;
+      }
+
+      .description {
+        font-size: 16px;
+        line-height: 1.8;
+        margin-bottom: 4rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .nav-container {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translate(-50%, 100%);
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        width: max-content;
+      }
+
+      .nav-container.visible {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      .nav {
+        display: flex;
+        gap: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #000;
+        padding: 0 2rem;
+        border-radius: 12px;
+        font-size: 17px;
+      }
+
+      .nav-item {
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        height: 55px;
+        color: #000;
+        text-decoration: none;
+      }
+
+      .dropdown {
+        position: absolute;
+        bottom: 70%;
+        right: -75px;
+        transform: translateX(-50%);
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 8px;
+        min-width: 150px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        margin-bottom: 0.5rem;
+      }
+
+      .nav-item:hover .dropdown,
+      .dropdown:hover {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .dropdown-option {
+        padding: 5px 10px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        color: #000;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        border-radius: 8px;
+      }
+
+      .dropdown-option:hover {
+        background-color: #f5f5f5;
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-20px);
+        transition: none;
+      }
+
+      .mobile-menu.active {
+        display: flex;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        padding-top: 20px;
+        transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          visibility 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .mobile-menu.active .menu-section:nth-child(1) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.1s;
+      }
+
+      .mobile-menu.active .menu-section:nth-child(2) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.2s;
+      }
+
+      .mobile-menu.active .menu-section:nth-child(3) {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.3s;
+      }
+
+      .menu-content {
+        display: flex;
+        flex-direction: column;
+        padding: 0px 10px;
+        width: 70%;
+      }
+
+      .mobile-menu-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 3rem;
+      }
+
+      .close-menu {
+        font-size: 1.5rem;
+        color: var(--text-color);
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .menu-section {
+        margin-bottom: 2rem;
+        opacity: 0;
+        transform: translateY(20px);
+        transition-property: opacity, transform;
+        transition-duration: 0.5s;
+        transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .menu-section-title {
+        color: #666;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.09em;
+      }
+
+      .menu-item {
+        color: var(--text-color);
+        text-decoration: none;
+        font-size: 17px;
+        display: block;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        transition: color 0.3s ease, background-color 0.3s ease;
+      }
+
+      .menu-item.border-bottom {
+        border-bottom: 1px solid rgba(238, 238, 238, 0.1);
+      }
+
+      .menu-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+        z-index: 1010;
+        position: relative;
+        height: 30px;
+        width: 30px;
+        opacity: 0;
+        transform: translateY(-30px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        display: none; /* Hide by default on desktop */
+      }
+
+      .menu-button.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .menu-button span {
+        display: block;
+        position: absolute;
+        width: 24px;
+        height: 2px;
+        background: var(--text-color);
+        left: 3px;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: center;
+      }
+
+      .menu-button span:nth-child(1) {
+        top: 11px;
+      }
+
+      .menu-button span:nth-child(2) {
+        top: 19px;
+      }
+
+      .menu-button.active span:nth-child(1) {
+        top: 15px;
+        transform: rotate(45deg);
+      }
+
+      .menu-button.active span:nth-child(2) {
+        top: 15px;
+        transform: rotate(-45deg);
+      }
+
+      .menu-item.inverse {
+        color: #000;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 12px 16px;
+        transition: background-color 0.3s ease;
+      }
+
+      .menu-item.inverse:hover {
+        /* Removed transform: scale(1.05); */
+        background-color: #f0f0f0;
+      }
+
+      @media (max-width: 768px) {
+        .animation-container {
+          top: 60%;
+          width: 100%;
+          height: 80%;
+        }
+
+        .bottom-cover {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 50px;
+          background-color: #000;
+          z-index: 999;
+        }
+
+        .logo {
+          margin-top: 50px;
+        }
+
+        .description {
+          font-size: 14px;
+        }
+
+        .container {
+          padding: 0 0.5rem;
+        }
+
+        .nav-container {
+          display: none;
+        }
+
+        .menu-button {
+          position: fixed;
+          top: 2rem;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 1010;
+          display: block; /* Show on mobile */
+        }
+
+        .menu-button.visible {
+          transform: translateX(-50%);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bottom-cover"></div>
+    <script>
+      function toggleMenu() {
+        const menu = document.getElementById("mobileMenu");
+        const menuButton = document.querySelector(".menu-button");
+
+        if (menu.classList.contains("active")) {
+          // Immediately hide menu without animation
+          menu.classList.remove("active");
+          menuButton.classList.remove("active");
+          document.body.style.overflow = "";
+        } else {
+          // Opening the menu
+          menu.classList.add("active");
+          menuButton.classList.add("active");
+          document.body.style.overflow = "hidden";
+        }
+      }
+
+      // Animation for desktop nav and top content
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initial check for device size
+        handleResponsiveElements();
+
+        // Handle window resize
+        window.addEventListener("resize", handleResponsiveElements);
+
+        // Animate content (for all devices)
+        setTimeout(function () {
+          const container = document.querySelector(".container");
+          container.classList.add("visible");
+        }, 500);
+      });
+
+      // Function to handle responsive elements
+      function handleResponsiveElements() {
+        const isMobile = window.innerWidth <= 768;
+        const menuButton = document.querySelector(".menu-button");
+        const navContainer = document.querySelector(".nav-container");
+
+        // Handle menu button visibility
+        if (isMobile) {
+          menuButton.style.display = "block";
+          setTimeout(function () {
+            menuButton.classList.add("visible");
+          }, 300);
+        } else {
+          menuButton.style.display = "none";
+          menuButton.classList.remove("visible");
+        }
+
+        // Handle nav container visibility
+        if (!isMobile) {
+          setTimeout(function () {
+            navContainer.classList.add("visible");
+          }, 800);
+        }
+      }
+
+      // Spring animation for menu items
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuItems = document.querySelectorAll(".menu-item");
+
+        // Removed the ripple effect code for hover
+      });
+    </script>
+
+    <style>
+      @keyframes ripple {
+        to {
+          transform: scale(2);
+          opacity: 0;
+        }
+      }
+    </style>
+
+    <button class="menu-button" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="menu-content">
+        <div class="mobile-menu-header">
+          <div></div>
+        </div>
+
+        <div class="menu-section">
+          <div class="menu-section-title">Resources</div>
+          <a
+            href="https://github.com/qlabs-xyz"
+            target="_blank"
+            class="menu-item border-bottom"
+            >Whitepaper</a
+          >
+          <a
+            href="https://github.com/qlabs-xyz"
+            target="_blank"
+            class="menu-item"
+            >Documentation</a
+          >
+        </div>
+
+        <div class="menu-section">
+          <div class="menu-section-title">Community</div>
+          <a
+            href="https://discord.gg/4K9gxnV4"
+            target="_blank"
+            class="menu-item border-bottom"
+            >Join Discord</a
+          >
+          <a
+            href="https://github.com/qlabs-xyz"
+            target="_blank"
+            class="menu-item"
+            >Changelog</a
+          >
+        </div>
+
+        <a
+          href="https://x.com/QlabsXyz"
+          target="_blank"
+          class="menu-item inverse"
+          >X (Twitter)</a
+        >
+      </div>
+    </div>
+
+    <div class="container">
+      <div>
+        <div class="logo">Q</div>
+        <div class="description">
+          A simple, open-source protocol built to give <br />
+          a comprehensive solution in value creation chains.
+        </div>
+      </div>
+
+      <div class="nav-container">
+        <div class="nav">
+          <div class="nav-item">
+            Resources
+            <svg
+              width="30"
+              height="30"
+              viewBox="0 0 21 21"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 9l4 4 4-4"
+                fill="none"
+                stroke="#000"
+                stroke-width="1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <div class="dropdown">
+              <a
+                href="https://github.com/qlabs-xyz"
+                target="_blank"
+                class="dropdown-option"
+                ><svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+                  <circle
+                    cx="9"
+                    cy="15"
+                    r="9"
+                    fill="#eee"
+                    stroke="#ccc"
+                    stroke-width="1"
+                  />
+                </svg>
+                Whitepaper</a
+              >
+              <a
+                href="https://github.com/qlabs-xyz"
+                target="_blank"
+                class="dropdown-option"
+                ><svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+                  <rect
+                    x="0"
+                    y="5"
+                    width="17"
+                    height="17"
+                    fill="#eee"
+                    stroke="#ccc"
+                    stroke-width="1"
+                    rx="5"
+                    ry="5"
+                  /></svg
+                >Documentation</a
+              >
+            </div>
+          </div>
+          <div class="nav-item">
+            Community
+            <svg
+              width="30"
+              height="30"
+              viewBox="0 0 21 21"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 9l4 4 4-4"
+                fill="none"
+                stroke="#000"
+                stroke-width="1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <div class="dropdown">
+              <a
+                href="https://discord.gg/4K9gxnV4"
+                target="_blank"
+                class="dropdown-option"
+                ><svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M8.5 10
+                       Q7.5 10 7 11
+                       L1 21
+                       Q0.5 22 1.5 22
+                       H16.5
+                       Q17.5 22 17 21
+                       L11 11
+                       Q10.5 10 9.5 10
+                       Z"
+                    fill="#eee"
+                    stroke="#ccc"
+                    stroke-width="1"
+                  />
+                </svg>
+                Join Discord</a
+              >
+              <a
+                href="https://github.com/qlabs-xyz"
+                target="_blank"
+                class="dropdown-option"
+                ><svg width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+                  <rect
+                    x="0"
+                    y="5"
+                    width="17"
+                    height="17"
+                    fill="#eee"
+                    stroke="#ccc"
+                    stroke-width="1"
+                    rx="5"
+                    ry="5"
+                  /></svg
+                >Changelog</a
+              >
+            </div>
+          </div>
+          <a
+            href="https://x.com/QlabsXyz"
+            target="_blank"
+            class="nav-item no-dropdown"
+            >X (Twitter)</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="animation-container">
+      <iframe
+        src="https://my.spline.design/coinanimationcopycopy-YBCSw40pkHudXjIIqBM5u3Xs/?hide=1"
+        frameborder="0"
+        tabindex="-1"
+        style="width: 100%; height: 100%"
+      ></iframe>
+    </div>
+  </body>
+</html>
