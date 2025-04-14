@@ -1,0 +1,397 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Q Core Blockchain</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Q Core Blockchain</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="q-core"><a class="header" href="#q-core">Q Core</a></h1>
+<p><em>Documentation for Q Core users and developers.</em></p>
+<h2 id="what-is-q-core"><a class="header" href="#what-is-q-core">What is Q Core?</a></h2>
+<p><a href="https://github.com/qlabs-xyz/qcore">Q Core</a> is a blockchain built on top of Cosmos SDK. It supports execution of CosmWasm smart contracts and compatible with Ethereum's EVM.</p>
+<h2 id="documentation-sections"><a class="header" href="#documentation-sections">Documentation Sections</a></h2>
+<p>Explore useful documentation sections:</p>
+<ul>
+<li><a href="./installation/installation.html">Installation Guide</a>: Learn how to install Q Core.</li>
+<li><a href="./run/run-a-node.html">Run a Node</a>: Instructions for running a node on the official network.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<p>Q Core runs on Linux and macOS.</p>
+<p>There are three core methods to obtain Q Core:</p>
+<ul>
+<li><a href="installation/./binaries.html">Pre-built binaries</a></li>
+<li><a href="installation/./docker.html">Docker images</a></li>
+<li><a href="installation/./source.html">Building from source.</a></li>
+</ul>
+<h2 id="hardware-requirements"><a class="header" href="#hardware-requirements">Hardware Requirements</a></h2>
+<p>The hardware requirements for running Q Core node depend on the node configuration and can change over time as the network grows or new features are implemented.</p>
+<p>The most important requirement is by far the disk, whereas CPU and RAM requirements are relatively flexible.</p>
+<div class="table-wrapper"><table><thead><tr><th></th><th>Archive Node</th><th>Full Node</th></tr></thead><tbody>
+<tr><td>Disk</td><td>At least 1TB (NVMe recommended)</td><td>At least 100GB (NVMe recommended)</td></tr>
+<tr><td>Memory</td><td>16GB+</td><td>8GB+</td></tr>
+<tr><td>CPU</td><td>Higher clock speed over core count</td><td>Higher clock speeds over core count</td></tr>
+<tr><td>Bandwidth</td><td>Stable 24Mbps+</td><td>Stable 24Mbps+</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="binaries"><a class="header" href="#binaries">Binaries</a></h1>
+<p><a href="https://github.com/qlabs-xyz/qcore/releases"><strong>Archives of precompiled Q Core binaries are available for Windows, macOS, and Linux.</strong></a> These are static executables. Users operating platforms not explicitly listed should download one of these archives.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="docker"><a class="header" href="#docker">Docker</a></h1>
+<p>There are two ways to obtain a Q Core Docker image:</p>
+<ol>
+<li><a href="installation/docker.html#github">GitHub</a></li>
+<li><a href="installation/docker.html#building-the-docker-image">Building from Source</a></li>
+</ol>
+<p>Once you have the Docker image, proceed to <a href="installation/docker.html#using-the-docker-image">Using the Docker image</a>.</p>
+<h2 id="github"><a class="header" href="#github">GitHub</a></h2>
+<p>Q Core Docker images for both x86_64 and ARM64 architectures are published with every Q Core release on GitHub Container Registry.</p>
+<p>Pull the latest image:</p>
+<pre><code class="language-bash">docker pull ghcr.io/glabs-xyz/qcore
+</code></pre>
+<p>Or a specific version (e.g., v1.0.0):</p>
+<pre><code class="language-bash">docker pull ghcr.io/glabs-xyz/qcore:v1.0.0
+</code></pre>
+<p>Test the image:</p>
+<pre><code class="language-bash">docker run --rm ghcr.io/glabs-xyz/qcore --version
+</code></pre>
+<h2 id="building-the-docker-image"><a class="header" href="#building-the-docker-image">Building the Docker Image</a></h2>
+<p>To build the Docker image from source, navigate to the repository root and run:</p>
+<pre><code class="language-bash">make local-image
+</code></pre>
+<p>The build may take several minutes. Once complete, test the image:</p>
+<pre><code class="language-bash">docker run qcore:local --version
+</code></pre>
+<h2 id="using-the-docker-image"><a class="header" href="#using-the-docker-image">Using the Docker Image</a></h2>
+<p>You can run the Docker image using either:</p>
+<ol>
+<li><a href="installation/docker.html#using-plain-docker">Plain Docker</a></li>
+<li><a href="installation/docker.html#using-docker-compose">Docker Compose</a></li>
+</ol>
+<h3 id="using-plain-docker"><a class="header" href="#using-plain-docker">Using Plain Docker</a></h3>
+<p>Run Q Core with Docker:</p>
+<pre><code class="language-bash">docker run \
+    -v .qcore:qcore/devnet \
+    -p 8545:8545 \
+    -p 8586:8586 \
+    -p 9091:9091 \
+    --name qcore \
+    qcore:local
+</code></pre>
+<p>The above command creates a container named <code>qcore</code>. It exposes port <code>8485</code> for Ethereum JSON-RPC,
+<code>8486</code> for Ethereum Websocket and port <code>9091</code> for Cosmos REST (gRPC-Gateway).</p>
+<p>To use the remote image from GitHub Container Registry, replace <code>qcore:local</code> with <code>ghcr.io/glabs-xyz/qcore</code> and your chosen tag.</p>
+<h2 id="interacting-with-q-core-inside-docker"><a class="header" href="#interacting-with-q-core-inside-docker">Interacting with Q Core Inside Docker</a></h2>
+<p>To interact with Q Core inside the Docker container, open a shell:</p>
+<pre><code class="language-bash">docker exec -it qcore bash
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="build-from-source"><a class="header" href="#build-from-source">Build from Source</a></h1>
+<p>You can build Q Core Node on Linux, macOS, Windows.</p>
+<h2 id="dependencies"><a class="header" href="#dependencies">Dependencies</a></h2>
+<p><strong>install Golang</strong> using <a href="https://go.dev/">go</a></p>
+<h2 id="build-q-core-node"><a class="header" href="#build-q-core-node">Build Q Core Node</a></h2>
+<p>With Go installed, you're ready to build Q Core Node. First, clone the repository:</p>
+<pre><code class="language-bash">git clone https://github.com/qlabs-xyz/qcore/
+cd qcore
+</code></pre>
+<p>Then, install Q Core Node into your <code>PATH</code> directly via:</p>
+<pre><code class="language-bash">make install
+</code></pre>
+<p>The binary will now be accessible as <code>qcored</code> via the command line, and exist under your default <code>bin</code> folder.</p>
+<p>Alternatively, you can build yourself with:</p>
+<pre><code class="language-bash">make build 
+</code></pre>
+<p>This will place the Q Core Node binary under <code>./build/qcored</code>, and you can copy it to your directory of preference after that.</p>
+<p>Compilation may take around ~5 minutes. Installation was successful if <code>qcored --help</code> displays the help for qcored</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="run-a-node"><a class="header" href="#run-a-node">Run a Node</a></h1>
+<p>Congratulations, now that you have installed Q Core.</p>
+<p>In this chapter we'll go through a few different topics you'll encounter when running Q Core Node, including:</p>
+<ol>
+<li><a href="run/./local.html">Local running</a></li>
+<li><a href="run/./config.html">Configuring</a></li>
+<li><a href="run/./interact.html">Interact with Node</a></li>
+<li><a href="run/./pruning.html">Pruning &amp; Full Node</a></li>
+<li><a href="run/./ports.html">Ports</a></li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="local-running-q-core-node"><a class="header" href="#local-running-q-core-node">Local running Q Core Node</a></h1>
+<h2 id="running-the-q-core-node-local"><a class="header" href="#running-the-q-core-node-local">Running the Q Core Node Local</a></h2>
+<p>First, ensure that you have Q Core Node installed by following the [installation instructions][installation].</p>
+<p>Now, to start the local node, run:</p>
+<pre><code class="language-bash">CLEAN=true sh scripts/test_node.sh
+</code></pre>
+<p>A genesis and default configuration will be created.</p>
+<p>If you want to run node without creating genesis and the default configuration, use the following command:</p>
+<pre><code class="language-bash">CLEAN=false sh scripts/test_node.sh
+</code></pre>
+<p>At this point, our Q Core node has started.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="interact-with-node"><a class="header" href="#interact-with-node">Interact with Node</a></h1>
+<h2 id="getting-the-client"><a class="header" href="#getting-the-client">Getting The Client</a></h2>
+<p>To be able to interact with the network, i.e., execute transactions and perform queries, you need to
+have a client installed. Please reference <a href="https://github.com/qlabs-xyz/qcore">this repo</a> to install the client locally.</p>
+<p>At this point we assume that you have <code>qcored</code> available in your terminal.</p>
+<h2 id="working-with-qcored-client"><a class="header" href="#working-with-qcored-client">Working with qcored client</a></h2>
+<p><code>qcored</code> is a special binary for accessing Q-Core network and it has the same functionality as
+a standard client. It means that it provides the same
+commands and args, for example, to generate a new keypair:</p>
+<pre><code class="language-shell">qcored keys add my-wallet 
+</code></pre>
+<p>Please see manual for all available commands:</p>
+<pre><code class="language-shell">qcored --help 
+</code></pre>
+<h2 id="working-with-devnet"><a class="header" href="#working-with-devnet">Working with devnet</a></h2>
+<p>Currently, only a devnet environment is supported which is publicly available.
+Here are details of the denvet environment. We recommend creating <code>.env</code> file in your workdir
+and put there the following params so you can always have them via <code>source .env</code>:</p>
+<pre><code class="language-dotenv">CHAIN_ID="qcore-devnet-1"
+FEE_DENOM="qnc"
+STAKE_DENOM="qnc"
+BECH32_HRP="qnc"
+WASMD_VERSION="v0.52.0"
+CONFIG_DIR=".qcore"
+BINARY="qcored"
+
+RPC="https://rpc.dev.qcore.xyz:26657"
+API="https://rpc.dev.qcore.xyz:1317"
+
+NODE=(--node $RPC)
+TXFLAG=($NODE --chain-id $CHAIN_ID --gas-prices 0.25$FEE_DENOM --gas auto --gas-adjustment 1.3 --output json)
+</code></pre>
+<h3 id="querying-a-smart-contract"><a class="header" href="#querying-a-smart-contract">Querying a smart contract</a></h3>
+<p>To query a smart contract, you can use the following command:</p>
+<pre><code class="language-shell">qcored $NODE query wasm contract-state smart [CONTRACT_ADDRESS] [QUERY]
+</code></pre>
+<p>Query is a JSON object that you create based on the query message. Let's say you have this query message:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub enum QueryMsg {
+    Tokens {
+        owner: Addr,
+        start_after: Option&lt;String&gt;,
+        limit: Option&lt;u32&gt;,
+    },
+}
+<span class="boring">}</span></code></pre></pre>
+<p>You can create a query message like this:</p>
+<pre><code class="language-shell">qcored $NODE query wasm contract-state smart [CONTRACT_ADDRESS] '{"tokens": {"owner": "$owner", "start_after": null, "limit": 10}}'
+</code></pre>
+<h3 id="execute-a-smart-contract"><a class="header" href="#execute-a-smart-contract">Execute a smart contract</a></h3>
+<p>To execute a smart contract, you can use the following command:</p>
+<pre><code class="language-shell">qcored tx wasm execute [CONTRACT_ADDRESS] [EXECUTE_MESSAGE] --from [YOUR_ADDRESS] $TXFLAG
+</code></pre>
+<p>Execute message is a JSON object that you create based on the execute message.
+Let's say you have this an execute message:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub enum ExecuteMsg {
+    Mint {
+        recipient: Addr,
+    },
+}
+<span class="boring">}</span></code></pre></pre>
+<p>You can create an execute message like this:</p>
+<pre><code class="language-shell">qcored tx wasm execute [CONTRACT_ADDRESS] '{"mint": {"recipient": "$address"}}' --from my-wallet $TXFLAG
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ports"><a class="header" href="#ports">Ports</a></h1>
+<p>This section provides essential information about the ports used by the system, their primary purposes, and recommendations for exposure settings.</p>
+<p>Here's your converted markdown table:</p>
+<div class="table-wrapper"><table><thead><tr><th></th><th>Description</th><th>Default Port</th></tr></thead><tbody>
+<tr><td><strong>Cosmos <a href="run//develop/api/cosmos-grpc#cosmos-grpc">gRPC</a></strong></td><td>Query or send Cosmos EVM transactions using gRPC</td><td><code>9090</code></td></tr>
+<tr><td><strong>Cosmos REST (<a href="run//develop/api/cosmos-grpc#cosmos-http-rest-grpc-gateway">gRPC-Gateway</a>)</strong></td><td>Query or send Cosmos EVM transactions using an HTTP RESTful API</td><td><code>9091</code></td></tr>
+<tr><td><strong>Ethereum <a href="run//develop/api/ethereum-json-rpc">JSON-RPC</a></strong></td><td>Query Ethereum-formatted transactions and blocks or send Ethereum txs using JSON-RPC</td><td><code>8545</code></td></tr>
+<tr><td><strong>Ethereum <a href="run//develop/api/ethereum-json-rpc#ethereum-websocket">Websocket</a></strong></td><td>Subscribe to Ethereum logs and events emitted in smart contracts.</td><td><code>8586</code></td></tr>
+<tr><td><strong>Tendermint <a href="run/ports.html#tendermint-rpc">RPC</a></strong></td><td>Query transactions, blocks, consensus state, broadcast transactions, etc.</td><td><code>26657</code></td></tr>
+<tr><td><strong>Tendermint <a href="run/ports.html#tendermint-websocket">Websocket</a></strong></td><td>Subscribe to Tendermint ABCI events</td><td><code>26657</code></td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
